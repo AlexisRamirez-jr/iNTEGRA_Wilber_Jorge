@@ -1,0 +1,58 @@
+﻿@model IEnumerable<iNTEGRA_Wilber_Jorge.DTO.EmpleadosDTO>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Apellido
+                    </th>
+                    <th>
+                        Nombre
+                    </th>
+                    <th>
+                        Telefono
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Foto
+                    </th>
+                    <th>
+                        Fecha contratacion
+                    </th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Apellidos)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nombres)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Telefono)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Correo)
+        </td>
+        <td>
+            <img src="~/img/Empleado/@item.RutaImg" style="width: 50px;" />
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FormatoFecha)
+        </td>
+        <td>
+            <a asp-action="Edit" asp-route-id="@item.IdEmpleado">Editar</a> |
+            <a asp-action="Details" asp-route-id="@item.IdEmpleado">PDF</a> |
+            <a asp-action="Delete" asp-route-id="@item.IdEmpleado">Eliminar</a>
+        </td>
+    </tr>
+}
+            </tbody>
+        </table>
+        </div>

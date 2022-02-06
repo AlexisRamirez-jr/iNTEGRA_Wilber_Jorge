@@ -1,0 +1,89 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model iNTEGRA_Wilber_Jorge.DTO.APIcryptoDTO.Bitcoin
+@{ ViewData["Title"] = "Crypto";
+    Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+
+<h3 class="text-center">Grafica</h3>
+
+<hr />
+<div id="Graphy">   </div>
+
+<!--
+estilos de grafica que pueden usarse opensource
+ https://plotly.com/javascript/configuration-options/
+-->
+
+<script>
+    $(document).ready(function () {
+        let contar = localStorage.getItem("contar") === null ? 0 : localStorage.getItem("contar");
+        /*mostrar datos en una gráfica que se actualice cada 30 segundos, con una hora de historial.*/
+        if (contar > 119) {
+            localStorage.clear();
+        }
+        else {
+            contar++;
+            localStorage.setItem("contar", contar);
+        }
+        let arrayData = localStorage.getItem("x") === null ? [] : localStorage.getItem("x").split(",");
+        arrayData.push(`@Model.Time.UpdatedIso.UtcDateTime.ToString("hh:mm:ss")`);
+        localStorage.setItem("x", arrayData);
+        arrayData = [];
+
+        arrayData = localStorage.getItem("usd") === null ? [] : localStorage.getItem("usd").split(",");
+        arrayData.push((`@Model.Bpi.USD.Rate`).replace(',', ''));
+        localStorage.setItem("usd", arrayData);
+        arrayData = [];
+
+        arrayData = localStorage.getItem("gbp") === null ? [] : localStorage.getItem("gbp").split(",");
+        arrayData.push((`@Model.Bpi.GBP.Rate`).replace(',', ''));
+        localStorage.setItem("gbp", arrayData);
+
+        arrayData = [];
+
+        arrayData = localStorage.getItem("eur") === null ? [] : localStorage.getItem("eur").split(",");
+        arrayData.push((`@Model.Bpi.EUR.Rate`).replace(',', ''));
+        localStorage.setItem("eur", arrayData);
+
+
+        window.setTimeout(function () {
+            window.location.reload();
+        }, 30000); //se actualiza automaticamente cada 30segundos
+
+         var trace1 = {
+            x: localStorage.getItem("x").split(","),
+            y: localStorage.getItem("usd").split(","),
+            name: `@Model.Bpi.USD.Description`,
+            mode: 'lines+markers',
+            line: { color: ['#006400'], width: 6 },
+            type: 'scatter'
+        };
+
+        var trace2 = {
+            x: localStorage.getItem("x").split(","),
+            y: localStorage.getItem("gbp").split(","),
+            name: `@Model.Bpi.GBP.Description`,
+            mode: 'lines+markers',
+            line: { color: ['##FF0000'], width: 6},
+            type: 'scatter'
+        };
+
+         var trace3 = {
+            x: localStorage.getItem("x").split(","),
+            y: localStorage.getItem("eur").split(","),
+            name: `@Model.Bpi.EUR.Description`,
+            mode: 'lines+markers',
+            line: { color: ['#00FFFF'], width: 6 },
+            type: 'scatter'
+        };
+
+        var data = [trace1, trace2, trace3];
+        var layout = {
+            title: 'Grafico Dinamico (VALOR_DINERO)',
+            showlegend: true
+        };
+        Plotly.newPlot('Graphy', data, layout, { scrollZoom: true });
+    });
+</script>
